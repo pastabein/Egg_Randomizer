@@ -113,12 +113,13 @@ eggListFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 eggListFrame.Visible = false
 Instance.new("UICorner", eggListFrame)
 
-local eggs = {"Bug Egg", "Night Egg", "Anti-Bee Egg", "Oasis Egg"}
+local eggs = {"Bug Egg", "Night Egg", "Anti-Bee Egg", "Oasis Egg", "Paradise Egg"}
 local eggColors = {
     ["Bug Egg"] = Color3.fromRGB(102, 204, 0),
     ["Night Egg"] = Color3.fromRGB(51, 51, 102),
     ["Anti-Bee Egg"] = Color3.fromRGB(204, 51, 0),
     ["Oasis Egg"] = Color3.fromRGB(51, 153, 204),
+    ["Paradise Egg"] = Color3.fromRGB(255, 223, 0),
 }
 
 for i, eggName in ipairs(eggs) do
