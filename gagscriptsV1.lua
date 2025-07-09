@@ -1,40 +1,41 @@
 local player = game.Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
 
--- Create Main ScreenGui
+-- === ScreenGui ===
 local screenGui = Instance.new("ScreenGui", playerGui)
 screenGui.ResetOnSpawn = false
 
--- === Dragging Function ===
+-- === Universal Draggable Function ===
 local function makeDraggable(frame)
-    local dragging, dragStart, startPos
+    local UIS = game:GetService("UserInputService")
+    local dragging, dragInput, dragStart, startPos
 
     frame.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
             dragging = true
             dragStart = input.Position
             startPos = frame.Position
+
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+            end)
         end
     end)
 
-    frame.InputEnded:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 then
-            dragging = false
-        end
-    end)
-
-    frame.InputChanged:Connect(function(input)
+    UIS.InputChanged:Connect(function(input)
         if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
             local delta = input.Position - dragStart
-            frame.Position = startPos + UDim2.new(0, delta.X, 0, 0, delta.Y)
+            frame.Position = startPos + UDim2.new(0, delta.X, 0, delta.Y)
         end
     end)
 end
 
 -- === Start Frame ===
 local startFrame = Instance.new("Frame", screenGui)
-startFrame.Size = UDim2.new(0.3, 0, 0.2, 0)
-startFrame.Position = UDim2.new(0.35, 0, 0.4, 0)
+startFrame.Size = UDim2.new(0, 250, 0, 120)
+startFrame.Position = UDim2.new(0.4, 0, 0.4, 0)
 startFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 startFrame.BorderColor3 = Color3.fromRGB(255, 0, 0)
 startFrame.BorderSizePixel = 2
@@ -53,18 +54,18 @@ Instance.new("UICorner", startButton)
 
 local startTextStroke = Instance.new("UIStroke", startButton)
 startTextStroke.Color = Color3.fromRGB(255, 255, 255)
-startTextStroke.Thickness = 0.8  -- thin border around the text
+startTextStroke.Thickness = 0.8
 
 -- === Main Square ===
 local mainSquare = Instance.new("Frame", screenGui)
-mainSquare.Size = UDim2.new(0.4, 0, 0.5, 0)
-mainSquare.Position = UDim2.new(0.3, 0, 0.25, 0)
+mainSquare.Size = UDim2.new(0, 280, 0, 180)
+mainSquare.Position = UDim2.new(0.4, 0, 0.35, 0)
 mainSquare.BorderSizePixel = 0
 mainSquare.Visible = false
 Instance.new("UICorner", mainSquare)
 makeDraggable(mainSquare)
 
--- Gradient background (black to gray)
+-- Gradient black-to-gray
 local gradient = Instance.new("UIGradient", mainSquare)
 gradient.Color = ColorSequence.new{
     ColorSequenceKeypoint.new(0, Color3.fromRGB(20, 20, 20)),
@@ -73,8 +74,8 @@ gradient.Color = ColorSequence.new{
 
 -- === Egg Button ===
 local eggButton = Instance.new("TextButton", mainSquare)
-eggButton.Size = UDim2.new(0.7, 0, 0.18, 0)
-eggButton.Position = UDim2.new(0.15, 0, 0.1, 0)
+eggButton.Size = UDim2.new(0.8, 0, 0.25, 0)
+eggButton.Position = UDim2.new(0.1, 0, 0.1, 0)
 eggButton.Text = "Choose Egg"
 eggButton.Font = Enum.Font.SourceSans
 eggButton.TextSize = 18
@@ -86,8 +87,8 @@ eggStroke.Color = Color3.fromRGB(255, 255, 255)
 
 -- === Refresh Button ===
 local refreshButton = Instance.new("TextButton", mainSquare)
-refreshButton.Size = UDim2.new(0.7, 0, 0.18, 0)
-refreshButton.Position = UDim2.new(0.15, 0, 0.35, 0)
+refreshButton.Size = UDim2.new(0.8, 0, 0.25, 0)
+refreshButton.Position = UDim2.new(0.1, 0, 0.4, 0)
 refreshButton.Text = "Refresh"
 refreshButton.Font = Enum.Font.SourceSans
 refreshButton.TextSize = 18
@@ -99,15 +100,22 @@ refreshStroke.Color = Color3.fromRGB(255, 255, 255)
 
 local refreshTimer = nil
 
--- === Egg List ===
+-- === Egg List Frame ===
 local eggListFrame = Instance.new("Frame", mainSquare)
-eggListFrame.Size = UDim2.new(0.5, 0, 0.6, 0)
+eggListFrame.Size = UDim2.new(0.6, 0, 0.7, 0)
 eggListFrame.Position = UDim2.new(1.05, 0, 0.1, 0)
 eggListFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 eggListFrame.Visible = false
 Instance.new("UICorner", eggListFrame)
 
+-- === Egg Options ===
 local eggs = {"Bug Egg", "Night Egg", "Anti-Bee Egg", "Oasis Egg"}
+local eggColors = {
+    ["Bug Egg"]     = Color3.fromRGB(102, 204, 0),    -- green
+    ["Night Egg"]   = Color3.fromRGB(51, 51, 102),    -- dark blue/purple
+    ["Anti-Bee Egg"]= Color3.fromRGB(204, 51, 0),     -- red
+    ["Oasis Egg"]   = Color3.fromRGB(51, 153, 204),   -- blue
+}
 
 for i, eggName in ipairs(eggs) do
     local eggOption = Instance.new("TextButton", eggListFrame)
@@ -117,13 +125,14 @@ for i, eggName in ipairs(eggs) do
     eggOption.Font = Enum.Font.SourceSans
     eggOption.TextSize = 16
     eggOption.TextColor3 = Color3.new(1, 1, 1)
-    eggOption.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    eggOption.BackgroundColor3 = eggColors[eggName] or Color3.fromRGB(60, 60, 60)
     Instance.new("UICorner", eggOption)
     local eggOptionStroke = Instance.new("UIStroke", eggOption)
     eggOptionStroke.Color = Color3.fromRGB(255, 255, 255)
 
     eggOption.MouseButton1Click:Connect(function()
         eggButton.Text = eggName
+        eggButton.BackgroundColor3 = eggColors[eggName] or Color3.fromRGB(70, 70, 70)
         eggListFrame.Visible = false
     end)
 end
