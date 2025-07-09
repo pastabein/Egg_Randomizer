@@ -3,13 +3,11 @@ local playerGui = player:WaitForChild("PlayerGui")
 
 -- Create Main ScreenGui
 local screenGui = Instance.new("ScreenGui", playerGui)
-screenGui.ResetOnSpawn = false -- Prevent reset on respawn
+screenGui.ResetOnSpawn = false
 
--- === Draggable Function ===
+-- === Dragging Function ===
 local function makeDraggable(frame)
-    local dragging
-    local dragStart
-    local startPos
+    local dragging, dragStart, startPos
 
     frame.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
@@ -28,7 +26,7 @@ local function makeDraggable(frame)
     frame.InputChanged:Connect(function(input)
         if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
             local delta = input.Position - dragStart
-            frame.Position = startPos + UDim2.new(0, delta.X, 0, delta.Y)
+            frame.Position = startPos + UDim2.new(0, delta.X, 0, 0, delta.Y)
         end
     end)
 end
@@ -44,32 +42,32 @@ Instance.new("UICorner", startFrame)
 makeDraggable(startFrame)
 
 local startButton = Instance.new("TextButton", startFrame)
-startButton.Size = UDim2.new(0.7, 0, 0.5, 0)  -- made wider (0.7 from 0.6)
+startButton.Size = UDim2.new(0.7, 0, 0.5, 0)
 startButton.Position = UDim2.new(0.15, 0, 0.25, 0)
-startButton.Text = " Start "
-startButton.Font = Enum.Font.SourceSansBold
+startButton.Text = "Start"
+startButton.Font = Enum.Font.SourceSans
 startButton.TextSize = 22
 startButton.TextColor3 = Color3.new(1, 1, 1)
 startButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
 Instance.new("UICorner", startButton)
 
-local startStroke = Instance.new("UIStroke", startButton)
-startStroke.Color = Color3.fromRGB(255, 255, 255)
-startStroke.Thickness = 1
+local startTextStroke = Instance.new("UIStroke", startButton)
+startTextStroke.Color = Color3.fromRGB(255, 255, 255)
+startTextStroke.Thickness = 0.8  -- thin border around the text
 
 -- === Main Square ===
 local mainSquare = Instance.new("Frame", screenGui)
 mainSquare.Size = UDim2.new(0.4, 0, 0.5, 0)
 mainSquare.Position = UDim2.new(0.3, 0, 0.25, 0)
-mainSquare.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 mainSquare.BorderSizePixel = 0
 mainSquare.Visible = false
 Instance.new("UICorner", mainSquare)
 makeDraggable(mainSquare)
 
+-- Gradient background (black to gray)
 local gradient = Instance.new("UIGradient", mainSquare)
 gradient.Color = ColorSequence.new{
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(30, 30, 30)),
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(20, 20, 20)),
     ColorSequenceKeypoint.new(1, Color3.fromRGB(80, 80, 80))
 }
 
@@ -78,7 +76,7 @@ local eggButton = Instance.new("TextButton", mainSquare)
 eggButton.Size = UDim2.new(0.7, 0, 0.18, 0)
 eggButton.Position = UDim2.new(0.15, 0, 0.1, 0)
 eggButton.Text = "Choose Egg"
-eggButton.Font = Enum.Font.SourceSansBold
+eggButton.Font = Enum.Font.SourceSans
 eggButton.TextSize = 18
 eggButton.TextColor3 = Color3.new(1, 1, 1)
 eggButton.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
@@ -91,7 +89,7 @@ local refreshButton = Instance.new("TextButton", mainSquare)
 refreshButton.Size = UDim2.new(0.7, 0, 0.18, 0)
 refreshButton.Position = UDim2.new(0.15, 0, 0.35, 0)
 refreshButton.Text = "Refresh"
-refreshButton.Font = Enum.Font.SourceSansBold
+refreshButton.Font = Enum.Font.SourceSans
 refreshButton.TextSize = 18
 refreshButton.TextColor3 = Color3.new(1, 1, 1)
 refreshButton.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
@@ -116,7 +114,7 @@ for i, eggName in ipairs(eggs) do
     eggOption.Size = UDim2.new(1, 0, 0.2, 0)
     eggOption.Position = UDim2.new(0, 0, (i - 1) * 0.22, 0)
     eggOption.Text = eggName
-    eggOption.Font = Enum.Font.SourceSansBold
+    eggOption.Font = Enum.Font.SourceSans
     eggOption.TextSize = 16
     eggOption.TextColor3 = Color3.new(1, 1, 1)
     eggOption.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
@@ -130,7 +128,7 @@ for i, eggName in ipairs(eggs) do
     end)
 end
 
--- === Functionality ===
+-- === Button Functionality ===
 startButton.MouseButton1Click:Connect(function()
     startFrame.Visible = false
     mainSquare.Visible = true
