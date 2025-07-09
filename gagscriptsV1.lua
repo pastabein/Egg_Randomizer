@@ -2,6 +2,38 @@
 
 -- [Previous Code...]
 
+-- === Minimize and Restore ===
+local minimizeButton = Instance.new("TextButton", mainSquare)
+minimizeButton.Size = UDim2.new(0, 25, 0, 25)
+minimizeButton.Position = UDim2.new(1, -30, 0, 5)
+minimizeButton.Text = "-"
+minimizeButton.Font = Enum.Font.SourceSansBold
+minimizeButton.TextSize = 18
+minimizeButton.TextColor3 = Color3.new(1, 0, 0)
+minimizeButton.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+Instance.new("UICorner", minimizeButton)
+
+local minimizedCircle = Instance.new("TextButton", screenGui)
+minimizedCircle.Size = UDim2.new(0, 50, 0, 50)
+minimizedCircle.Position = UDim2.new(0.4, 0, 0.35, 0)
+minimizedCircle.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+minimizedCircle.Text = "Full"
+minimizedCircle.Font = Enum.Font.SourceSansBold
+minimizedCircle.TextSize = 16
+minimizedCircle.TextColor3 = Color3.new(1, 0, 0)
+minimizedCircle.Visible = false
+Instance.new("UICorner", minimizedCircle).CornerRadius = UDim.new(1, 0)
+
+minimizeButton.MouseButton1Click:Connect(function()
+    mainSquare.Visible = false
+    minimizedCircle.Visible = true
+end)
+
+minimizedCircle.MouseButton1Click:Connect(function()
+    minimizedCircle.Visible = false
+    mainSquare.Visible = true
+end)
+
 -- === Refresh Button ===
 local refreshButton = Instance.new("TextButton", mainSquare)
 refreshButton.Size = UDim2.new(0.8, 0, 0.15, 0)
@@ -40,6 +72,7 @@ detectButton.Size = UDim2.new(0.8, 0, 0.15, 0)
 detectButton.Position = UDim2.new(0.1, 0, 0.45, 0)
 detectButton.Text = "Detect Egg"
 detectButton.Font = Enum.Font.SourceSans
+
 detectButton.TextSize = 18
 detectButton.TextColor3 = Color3.new(1, 1, 1)
 detectButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
