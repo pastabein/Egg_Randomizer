@@ -1,4 +1,4 @@
--- Roblox Egg Refresher Script (Fully Movable, Green-Slate Gradient, Title Label)
+-- Roblox Egg Refresher Script (Fully Movable, Green-Black Gradient, Title Label)
 
 local player = game.Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
@@ -24,7 +24,7 @@ makeDraggable(startFrame)
 local startGradient = Instance.new("UIGradient", startFrame)
 startGradient.Color = ColorSequence.new{
     ColorSequenceKeypoint.new(0, Color3.fromRGB(34, 70, 34)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(112, 128, 144)) -- Slate Gray
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0)) -- Black
 }
 
 local startButton = Instance.new("TextButton", startFrame)
@@ -43,7 +43,7 @@ startTextStroke.Thickness = 0.8
 
 -- === Main Square ===
 local mainSquare = Instance.new("Frame", screenGui)
-mainSquare.Size = UDim2.new(0, 280, 0, 210)
+mainSquare.Size = UDim2.new(0, 280, 0, 250)
 mainSquare.Position = UDim2.new(0.4, 0, 0.35, 0)
 mainSquare.BackgroundColor3 = Color3.fromRGB(34, 70, 34)
 mainSquare.Visible = false
@@ -53,13 +53,13 @@ makeDraggable(mainSquare)
 local mainGradient = Instance.new("UIGradient", mainSquare)
 mainGradient.Color = ColorSequence.new{
     ColorSequenceKeypoint.new(0, Color3.fromRGB(34, 70, 34)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(112, 128, 144))
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0)) -- Black
 }
 
 -- === Egg Button ===
 local eggButton = Instance.new("TextButton", mainSquare)
-eggButton.Size = UDim2.new(0.8, 0, 0.2, 0)
-eggButton.Position = UDim2.new(0.1, 0, 0.1, 0)
+eggButton.Size = UDim2.new(0.8, 0, 0.15, 0)
+eggButton.Position = UDim2.new(0.1, 0, 0.05, 0)
 eggButton.Text = "Choose Egg"
 eggButton.Font = Enum.Font.SourceSans
 eggButton.TextSize = 18
@@ -71,8 +71,8 @@ eggStroke.Color = Color3.fromRGB(255, 255, 255)
 
 -- === Refresh Button ===
 local refreshButton = Instance.new("TextButton", mainSquare)
-refreshButton.Size = UDim2.new(0.8, 0, 0.2, 0)
-refreshButton.Position = UDim2.new(0.1, 0, 0.35, 0)
+refreshButton.Size = UDim2.new(0.8, 0, 0.15, 0)
+refreshButton.Position = UDim2.new(0.1, 0, 0.25, 0)
 refreshButton.Text = "Refresh"
 refreshButton.Font = Enum.Font.SourceSans
 refreshButton.TextSize = 18
@@ -82,10 +82,23 @@ Instance.new("UICorner", refreshButton)
 local refreshStroke = Instance.new("UIStroke", refreshButton)
 refreshStroke.Color = Color3.fromRGB(255, 255, 255)
 
+-- === Detect Egg Button ===
+local detectButton = Instance.new("TextButton", mainSquare)
+detectButton.Size = UDim2.new(0.8, 0, 0.15, 0)
+detectButton.Position = UDim2.new(0.1, 0, 0.45, 0)
+detectButton.Text = "Detect Egg"
+detectButton.Font = Enum.Font.SourceSans
+detectButton.TextSize = 18
+detectButton.TextColor3 = Color3.new(1, 1, 1)
+detectButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+Instance.new("UICorner", detectButton)
+local detectStroke = Instance.new("UIStroke", detectButton)
+detectStroke.Color = Color3.fromRGB(255, 255, 255)
+
 -- === Title Label ===
 local titleLabel = Instance.new("TextLabel", mainSquare)
-titleLabel.Size = UDim2.new(1, 0, 0.2, 0)
-titleLabel.Position = UDim2.new(0, 0, 0.7, 0)
+titleLabel.Size = UDim2.new(1, 0, 0.15, 0)
+titleLabel.Position = UDim2.new(0, 0, 0.65, 0)
 titleLabel.Text = "Egg Refresher - Modified by No-Lag Script"
 titleLabel.Font = Enum.Font.SourceSansSemibold
 titleLabel.TextSize = 14
@@ -95,7 +108,7 @@ titleLabel.BackgroundTransparency = 1
 -- === Egg List ===
 local eggListFrame = Instance.new("Frame", mainSquare)
 eggListFrame.Size = UDim2.new(0.6, 0, 0.6, 0)
-eggListFrame.Position = UDim2.new(1.05, 0, 0.1, 0)
+eggListFrame.Position = UDim2.new(1.05, 0, 0.05, 0)
 eggListFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 eggListFrame.Visible = false
 Instance.new("UICorner", eggListFrame)
@@ -156,5 +169,26 @@ refreshButton.MouseButton1Click:Connect(function()
         refreshButton.Text = "Refresh"
         refreshButton.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
         refreshTimer = nil
+    end)
+end)
+
+local detectTimer
+detectButton.MouseButton1Click:Connect(function()
+    if detectTimer then return end
+    detectButton.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
+
+    local timeRemaining = 600
+    detectButton.Text = "Detect Egg (" .. timeRemaining .. "s)"
+    detectTimer = true
+
+    task.spawn(function()
+        while timeRemaining > 0 do
+            task.wait(1)
+            timeRemaining -= 1
+            detectButton.Text = "Detect Egg (" .. timeRemaining .. "s)"
+        end
+        detectButton.Text = "Detect Egg"
+        detectButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+        detectTimer = nil
     end)
 end)
