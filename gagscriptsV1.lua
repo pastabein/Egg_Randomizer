@@ -2,6 +2,7 @@
 
 local player = game.Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
+local TweenService = game:GetService("TweenService")
 
 -- === ScreenGui ===
 local screenGui = Instance.new("ScreenGui", playerGui)
@@ -36,7 +37,6 @@ startButton.TextSize = 22
 startButton.TextColor3 = Color3.new(1, 1, 1)
 startButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
 Instance.new("UICorner", startButton)
-
 local startTextStroke = Instance.new("UIStroke", startButton)
 startTextStroke.Color = Color3.fromRGB(255, 255, 255)
 startTextStroke.Thickness = 0.8
@@ -157,7 +157,6 @@ refreshButton.MouseButton1Click:Connect(function()
     refreshButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 
     local timeRemaining = 180
-    refreshButton.Text = "Refresh (3:00)"
     refreshTimer = true
 
     task.spawn(function()
@@ -179,13 +178,14 @@ detectButton.MouseButton1Click:Connect(function()
     if detectTimer then return end
     detectTimer = true
 
-    detectButton.BackgroundColor3 = Color3.fromRGB(255, 80, 80)
-    detectButton.Text = "Detecting..."
-
-    local glowTween = game:GetService("TweenService"):Create(detectButton, TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true), {BackgroundColor3 = Color3.fromRGB(255, 120, 120)})
-    glowTween:Play()
-
     local timeRemaining = 600
+
+    local glowTween = TweenService:Create(detectButton, TweenInfo.new(0.8, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true), {
+        BackgroundColor3 = Color3.fromRGB(255, 100, 100)
+    })
+
+    detectButton.Text = string.format("Detecting... (%d:%02d)", math.floor(timeRemaining / 60), timeRemaining % 60)
+    glowTween:Play()
 
     task.spawn(function()
         while timeRemaining > 0 do
