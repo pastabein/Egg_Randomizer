@@ -24,7 +24,7 @@ makeDraggable(startFrame)
 local startGradient = Instance.new("UIGradient", startFrame)
 startGradient.Color = ColorSequence.new{
     ColorSequenceKeypoint.new(0, Color3.fromRGB(34, 70, 34)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0)) -- Black
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0))
 }
 
 local startButton = Instance.new("TextButton", startFrame)
@@ -53,7 +53,7 @@ makeDraggable(mainSquare)
 local mainGradient = Instance.new("UIGradient", mainSquare)
 mainGradient.Color = ColorSequence.new{
     ColorSequenceKeypoint.new(0, Color3.fromRGB(34, 70, 34)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0)) -- Black
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0))
 }
 
 -- === Egg Button ===
@@ -157,14 +157,16 @@ refreshButton.MouseButton1Click:Connect(function()
     refreshButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 
     local timeRemaining = 180
-    refreshButton.Text = "Refresh (" .. timeRemaining .. "s)"
+    refreshButton.Text = "Refresh (3:00)"
     refreshTimer = true
 
     task.spawn(function()
         while timeRemaining > 0 do
             task.wait(1)
             timeRemaining -= 1
-            refreshButton.Text = "Refresh (" .. timeRemaining .. "s)"
+            local minutes = math.floor(timeRemaining / 60)
+            local seconds = timeRemaining % 60
+            refreshButton.Text = string.format("Refresh (%d:%02d)", minutes, seconds)
         end
         refreshButton.Text = "Refresh"
         refreshButton.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
@@ -175,18 +177,26 @@ end)
 local detectTimer
 detectButton.MouseButton1Click:Connect(function()
     if detectTimer then return end
-    detectButton.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
+    detectTimer = true
+
+    detectButton.BackgroundColor3 = Color3.fromRGB(255, 80, 80)
+    detectButton.Text = "Detecting..."
+
+    local glowTween = game:GetService("TweenService"):Create(detectButton, TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true), {BackgroundColor3 = Color3.fromRGB(255, 120, 120)})
+    glowTween:Play()
 
     local timeRemaining = 600
-    detectButton.Text = "Detect Egg (" .. timeRemaining .. "s)"
-    detectTimer = true
 
     task.spawn(function()
         while timeRemaining > 0 do
             task.wait(1)
             timeRemaining -= 1
-            detectButton.Text = "Detect Egg (" .. timeRemaining .. "s)"
+            local minutes = math.floor(timeRemaining / 60)
+            local seconds = timeRemaining % 60
+            detectButton.Text = string.format("Detecting... (%d:%02d)", minutes, seconds)
         end
+
+        glowTween:Cancel()
         detectButton.Text = "Detect Egg"
         detectButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
         detectTimer = nil
