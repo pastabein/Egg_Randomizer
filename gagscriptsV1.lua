@@ -1,14 +1,10 @@
--- Roblox Egg Refresher Script (Fully Movable, Green-Black Gradient, Title Label)
+-- Roblox Egg Refresher Script with Start Button and Minimize/Full Mode
 
 local player = game.Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
-local TweenService = game:GetService("TweenService")
-
--- === ScreenGui ===
 local screenGui = Instance.new("ScreenGui", playerGui)
 screenGui.ResetOnSpawn = false
 
--- === Easier Drag Function ===
 local function makeDraggable(frame)
     frame.Active = true
     frame.Draggable = true
@@ -22,12 +18,6 @@ startFrame.BackgroundColor3 = Color3.fromRGB(34, 70, 34)
 Instance.new("UICorner", startFrame)
 makeDraggable(startFrame)
 
-local startGradient = Instance.new("UIGradient", startFrame)
-startGradient.Color = ColorSequence.new{
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(34, 70, 34)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0))
-}
-
 local startButton = Instance.new("TextButton", startFrame)
 startButton.Size = UDim2.new(0.7, 0, 0.5, 0)
 startButton.Position = UDim2.new(0.15, 0, 0.25, 0)
@@ -37,11 +27,11 @@ startButton.TextSize = 22
 startButton.TextColor3 = Color3.new(1, 1, 1)
 startButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
 Instance.new("UICorner", startButton)
-local startTextStroke = Instance.new("UIStroke", startButton)
-startTextStroke.Color = Color3.fromRGB(255, 255, 255)
-startTextStroke.Thickness = 0.8
+local startStroke = Instance.new("UIStroke", startButton)
+startStroke.Color = Color3.fromRGB(255, 255, 255)
+startStroke.Thickness = 0.8
 
--- === Main Square ===
+-- === Main UI ===
 local mainSquare = Instance.new("Frame", screenGui)
 mainSquare.Size = UDim2.new(0, 280, 0, 250)
 mainSquare.Position = UDim2.new(0.4, 0, 0.35, 0)
@@ -50,69 +40,45 @@ mainSquare.Visible = false
 Instance.new("UICorner", mainSquare)
 makeDraggable(mainSquare)
 
-local mainGradient = Instance.new("UIGradient", mainSquare)
-mainGradient.Color = ColorSequence.new{
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(34, 70, 34)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0))
-}
+startButton.MouseButton1Click:Connect(function()
+    startFrame.Visible = false
+    mainSquare.Visible = true
+end)
 
--- === Egg Button ===
-local eggButton = Instance.new("TextButton", mainSquare)
-eggButton.Size = UDim2.new(0.8, 0, 0.15, 0)
-eggButton.Position = UDim2.new(0.1, 0, 0.05, 0)
-eggButton.Text = "Choose Egg"
-eggButton.Font = Enum.Font.SourceSans
-eggButton.TextSize = 18
-eggButton.TextColor3 = Color3.new(1, 1, 1)
-eggButton.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
-Instance.new("UICorner", eggButton)
-local eggStroke = Instance.new("UIStroke", eggButton)
-eggStroke.Color = Color3.fromRGB(255, 255, 255)
+-- === Minimize and Restore ===
+local minimizeButton = Instance.new("TextButton", mainSquare)
+minimizeButton.Size = UDim2.new(0, 25, 0, 25)
+minimizeButton.Position = UDim2.new(1, -30, 0, 5)
+minimizeButton.Text = "-"
+minimizeButton.Font = Enum.Font.SourceSansBold
+minimizeButton.TextSize = 18
+minimizeButton.TextColor3 = Color3.new(1, 0, 0)
+minimizeButton.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+Instance.new("UICorner", minimizeButton)
 
--- === Refresh Button ===
-local refreshButton = Instance.new("TextButton", mainSquare)
-refreshButton.Size = UDim2.new(0.8, 0, 0.15, 0)
-refreshButton.Position = UDim2.new(0.1, 0, 0.25, 0)
-refreshButton.Text = "Refresh"
-refreshButton.Font = Enum.Font.SourceSans
-refreshButton.TextSize = 18
-refreshButton.TextColor3 = Color3.new(1, 1, 1)
-refreshButton.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
-Instance.new("UICorner", refreshButton)
-local refreshStroke = Instance.new("UIStroke", refreshButton)
-refreshStroke.Color = Color3.fromRGB(255, 255, 255)
+local minimizedCircle = Instance.new("TextButton", screenGui)
+minimizedCircle.Size = UDim2.new(0, 50, 0, 50)
+minimizedCircle.Position = UDim2.new(0.4, 0, 0.35, 0)
+minimizedCircle.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+minimizedCircle.Text = "Full"
+minimizedCircle.Font = Enum.Font.SourceSansBold
+minimizedCircle.TextSize = 16
+minimizedCircle.TextColor3 = Color3.new(1, 0, 0)
+minimizedCircle.Visible = false
+Instance.new("UICorner", minimizedCircle).CornerRadius = UDim.new(1, 0)
+makeDraggable(minimizedCircle)
 
--- === Detect Egg Button ===
-local detectButton = Instance.new("TextButton", mainSquare)
-detectButton.Size = UDim2.new(0.8, 0, 0.15, 0)
-detectButton.Position = UDim2.new(0.1, 0, 0.45, 0)
-detectButton.Text = "Detect Egg"
-detectButton.Font = Enum.Font.SourceSans
-detectButton.TextSize = 18
-detectButton.TextColor3 = Color3.new(1, 1, 1)
-detectButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
-Instance.new("UICorner", detectButton)
-local detectStroke = Instance.new("UIStroke", detectButton)
-detectStroke.Color = Color3.fromRGB(255, 255, 255)
+minimizeButton.MouseButton1Click:Connect(function()
+    mainSquare.Visible = false
+    minimizedCircle.Visible = true
+end)
 
--- === Title Label ===
-local titleLabel = Instance.new("TextLabel", mainSquare)
-titleLabel.Size = UDim2.new(1, 0, 0.15, 0)
-titleLabel.Position = UDim2.new(0, 0, 0.65, 0)
-titleLabel.Text = "Egg Refresher - Modified by No-Lag Script"
-titleLabel.Font = Enum.Font.SourceSansSemibold
-titleLabel.TextSize = 14
-titleLabel.TextColor3 = Color3.new(1, 1, 1)
-titleLabel.BackgroundTransparency = 1
+minimizedCircle.MouseButton1Click:Connect(function()
+    minimizedCircle.Visible = false
+    mainSquare.Visible = true
+end)
 
--- === Egg List ===
-local eggListFrame = Instance.new("Frame", mainSquare)
-eggListFrame.Size = UDim2.new(0.6, 0, 0.6, 0)
-eggListFrame.Position = UDim2.new(1.05, 0, 0.05, 0)
-eggListFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-eggListFrame.Visible = false
-Instance.new("UICorner", eggListFrame)
-
+-- === Egg, Refresh, Detect Egg, and Title Buttons ===
 local eggs = {"Bug Egg", "Night Egg", "Anti-Bee Egg", "Oasis Egg", "Paradise Egg"}
 local eggColors = {
     ["Bug Egg"] = Color3.fromRGB(102, 204, 0),
@@ -122,6 +88,22 @@ local eggColors = {
     ["Paradise Egg"] = Color3.fromRGB(255, 223, 0),
 }
 
+local eggButton = Instance.new("TextButton", mainSquare)
+eggButton.Size = UDim2.new(0.8, 0, 0.15, 0)
+eggButton.Position = UDim2.new(0.1, 0, 0.05, 0)
+eggButton.Text = "Choose Egg"
+eggButton.Font = Enum.Font.SourceSans
+eggButton.TextSize = 18
+eggButton.TextColor3 = Color3.new(1, 1, 1)
+eggButton.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+Instance.new("UICorner", eggButton)
+
+local eggListFrame = Instance.new("Frame", mainSquare)
+eggListFrame.Size = UDim2.new(0.6, 0, 0.6, 0)
+eggListFrame.Position = UDim2.new(1.05, 0, 0.05, 0)
+eggListFrame.Visible = false
+Instance.new("UICorner", eggListFrame)
+
 for i, eggName in ipairs(eggs) do
     local eggOption = Instance.new("TextButton", eggListFrame)
     eggOption.Size = UDim2.new(1, 0, 0.2, 0)
@@ -130,36 +112,37 @@ for i, eggName in ipairs(eggs) do
     eggOption.Font = Enum.Font.SourceSans
     eggOption.TextSize = 16
     eggOption.TextColor3 = Color3.new(1, 1, 1)
-    eggOption.BackgroundColor3 = eggColors[eggName] or Color3.fromRGB(60, 60, 60)
+    eggOption.BackgroundColor3 = eggColors[eggName]
     Instance.new("UICorner", eggOption)
-    local eggOptionStroke = Instance.new("UIStroke", eggOption)
-    eggOptionStroke.Color = Color3.fromRGB(255, 255, 255)
 
     eggOption.MouseButton1Click:Connect(function()
         eggButton.Text = eggName
-        eggButton.BackgroundColor3 = eggColors[eggName] or Color3.fromRGB(70, 70, 70)
+        eggButton.BackgroundColor3 = eggColors[eggName]
         eggListFrame.Visible = false
     end)
 end
-
--- === Button Actions ===
-startButton.MouseButton1Click:Connect(function()
-    startFrame.Visible = false
-    mainSquare.Visible = true
-end)
 
 eggButton.MouseButton1Click:Connect(function()
     eggListFrame.Visible = not eggListFrame.Visible
 end)
 
+local refreshButton = Instance.new("TextButton", mainSquare)
+refreshButton.Size = UDim2.new(0.8, 0, 0.15, 0)
+refreshButton.Position = UDim2.new(0.1, 0, 0.25, 0)
+refreshButton.Text = "Refresh"
+refreshButton.Font = Enum.Font.SourceSans
+refreshButton.TextSize = 18
+refreshButton.TextColor3 = Color3.new(1, 1, 1)
+refreshButton.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+Instance.new("UICorner", refreshButton)
+
 local refreshTimer
 refreshButton.MouseButton1Click:Connect(function()
     if refreshTimer then return end
+    refreshTimer = true
     refreshButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 
     local timeRemaining = 180
-    refreshTimer = true
-
     task.spawn(function()
         while timeRemaining > 0 do
             task.wait(1)
@@ -174,13 +157,23 @@ refreshButton.MouseButton1Click:Connect(function()
     end)
 end)
 
+local detectButton = Instance.new("TextButton", mainSquare)
+detectButton.Size = UDim2.new(0.8, 0, 0.15, 0)
+detectButton.Position = UDim2.new(0.1, 0, 0.45, 0)
+detectButton.Text = "Detect Egg"
+detectButton.Font = Enum.Font.SourceSans
+detectButton.TextSize = 18
+detectButton.TextColor3 = Color3.new(1, 1, 1)
+detectButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+Instance.new("UICorner", detectButton)
+
 local detectTimer
+local TweenService = game:GetService("TweenService")
 detectButton.MouseButton1Click:Connect(function()
     if detectTimer then return end
     detectTimer = true
 
     local timeRemaining = 600
-
     local glowTween = TweenService:Create(detectButton, TweenInfo.new(0.8, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true), {
         BackgroundColor3 = Color3.fromRGB(255, 100, 100)
     })
@@ -203,3 +196,12 @@ detectButton.MouseButton1Click:Connect(function()
         detectTimer = nil
     end)
 end)
+
+local titleLabel = Instance.new("TextLabel", mainSquare)
+titleLabel.Size = UDim2.new(1, 0, 0.15, 0)
+titleLabel.Position = UDim2.new(0, 0, 0.65, 0)
+titleLabel.Text = "Egg Refresher - Modified by No-Lag Script"
+titleLabel.Font = Enum.Font.SourceSansSemibold
+titleLabel.TextSize = 14
+titleLabel.TextColor3 = Color3.new(1, 1, 1)
+titleLabel.BackgroundTransparency = 1
